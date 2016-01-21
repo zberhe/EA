@@ -45,31 +45,31 @@ public class LoggingAspect {
 //            return retval;
 //                
 //	}
-    @Before("execution(public * cs544.bank.service.AccountService.createAccount(..) ) && args(accountNumber,customerName)")
+    @AfterReturning("execution(public * cs544.bank.service.AccountService.createAccount(..) ) && args(accountNumber,customerName)")
     public void logCreatedAccount(JoinPoint joinPoint, long accountNumber, String customerName) {
 
         logger.log("\ncreateAccount with parameters accountNumber= " + accountNumber + " ,customerName= " + customerName + "\n");
     }
 
-    @Before("execution(public * cs544.bank.service.AccountService.deposit*(..) ) && args(accountNumber,amount)")
+    @AfterReturning("execution(public * cs544.bank.service.AccountService.deposit*(..) ) && args(accountNumber,amount)")
     public void logDeposit(JoinPoint joinPoint, long accountNumber, double amount) {
 
         logger.log("\ndeposit with parameters accountNumber= " + accountNumber + " , amount= " + amount + "\n");
     }
 
-    @Before("execution(public * cs544.bank.service.AccountService.withdraw*(..) ) && args(accountNumber,amount)")
+    @AfterReturning("execution(public * cs544.bank.service.AccountService.withdraw*(..) ) && args(accountNumber,amount)")
     public void logWithdraw(JoinPoint joinPoint, long accountNumber, double amount) {
 
         logger.log("\nwithdrawEuros with parameters accountNumber= " + accountNumber + " , amount= " + amount + "\n");
     }
 
-    @Before("execution(public * cs544.bank.service.AccountService.transferFunds(..) ) && args(fromAccountNumber, toAccountNumber, amount, description)")
+    @AfterReturning("execution(public * cs544.bank.service.AccountService.transferFunds(..) ) && args(fromAccountNumber, toAccountNumber, amount, description)")
     public void logTransferFund(JoinPoint joinPoint, long fromAccountNumber, long toAccountNumber, double amount, String description) {
 
         logger.log("\ntransferFunds with parameters fromAccountNumber= " + fromAccountNumber + " , toAccountNumber= " + toAccountNumber + " , amount= " + amount + " , description= " + description+"\n");
     }
 
-    @Before("execution(public * cs544.bank.jms.JMSSender.sendJMSMessage(..) )&& args(text)")
+    @AfterReturning("execution(public * cs544.bank.jms.JMSSender.sendJMSMessage(..) )&& args(text)")
     public void logSentJMS(JoinPoint joinPoint, String text) {
         logger.log("\nJMS message sent: "
                 + text + "\n");
