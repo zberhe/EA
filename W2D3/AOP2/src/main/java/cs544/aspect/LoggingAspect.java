@@ -33,18 +33,18 @@ public class LoggingAspect {
         System.out.println("A method in bank.dao package got called:" + joinPoint.getSignature());
     }
 
-//        @Around("execution(public * cs544.bank.service.*.*(..))")
-//	public Object measureInvocationTime(ProceedingJoinPoint call) throws Throwable{
-//		StopWatch clock = new StopWatch();
-//                
-//            clock.start(call.getSignature().getName());
-//            Object retval = call.proceed();
-//            clock.stop();
-//            long totaltime = clock.getLastTaskTimeMillis();
-//            System.out.println("Total time to execute: "+call.getSignature().getName()+":   "+totaltime);
-//            return retval;
-//                
-//	}
+        @Around("execution(public * cs544.bank.service.*.*(..))")
+	public Object measureInvocationTime(ProceedingJoinPoint call) throws Throwable{
+		StopWatch clock = new StopWatch();
+                
+            clock.start(call.getSignature().getName());
+            Object retval = call.proceed();
+            clock.stop();
+            long totaltime = clock.getLastTaskTimeMillis();
+            System.out.println("Total time to execute: "+call.getSignature().getName()+":   "+totaltime);
+            return retval;
+                
+	}
     @AfterReturning("execution(public * cs544.bank.service.AccountService.createAccount(..) ) && args(accountNumber,customerName)")
     public void logCreatedAccount(JoinPoint joinPoint, long accountNumber, String customerName) {
 
