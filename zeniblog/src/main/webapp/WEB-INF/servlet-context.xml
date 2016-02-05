@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="windows-1252"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans 
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/util 
+       http://www.springframework.org/schema/util/spring-util-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/tx 
+       http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+
+    <import resource="springSecurity.xml" />
+    <!-- Lets us find resources (.html etc) through the default servlet -->
+    <mvc:default-servlet-handler/> 
+	
+
+    <!-- Handles HTTP GET requests for /resources/** by efficiently serving 
+    up static resources in the ${webappRoot}/resources/ directory -->
+    <mvc:resources mapping="/resources/**" location="/resources/" />
+    <mvc:annotation-driven />
+    <!-- Activates annotation based transaction management -->
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+    <context:component-scan base-package="com.packt.blog" />
+  
+    <bean
+        class="org.springframework.web.servlet.view.InternalResourceViewResolver
+">
+        <property name="prefix" value="/WEB-INF/views/" />
+        <property name="suffix" value=".jsp" />
+    </bean>
+   
+    <!-- Scan classpath for annotations (eg: @Service, @Repository etc) -->
+    <context:component-scan base-package="com.packt.blog"/>
+   
+    <!-- JDBC Data Source. It is assumed you have MySQL running on localhost port 3306 with 
+    username root and blank password. Change below if it's not the case -->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"/> 
+        <property name="url" value="jdbc:mysql://localhost/cs544"/>  
+        <property name="username" value="root"/> 
+        <property name="password" value=""/>         
+        
+    </bean>  
+   
+   
+    <bean id="hibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+        <property name="properties">
+            <props>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
+                <prop key="connection.pool.size">1</prop>
+                <prop key="hibernate.show_sql">true</prop>
+                <!--<prop key="hibernate.current_session_context_class">thread</prop>-->
+                
+            </props>
+        </property>        
+    </bean>
+   
+   <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="hibernateProperties" ref="hibernateProperties"/>
+        <property name="annotatedClasses">
+            <list>               
+                <value>com.packt.blog.domain.User</value>
+               <value>com.packt.blog.domain.Post</value>
+                 <value>com.packt.blog.domain.Comment</value>
+                <value>com.packt.blog.domain.Role</value>
+                <value>com.packt.blog.domain.Privilege</value>
+                            
+            </list>
+        </property>
+    </bean>
+    
+<!--     <bean id = "postService" class = "com.packt.blog.service.Impl.PostService">
+            
+    </bean>    -->
+    <bean id = "userService" class = "com.packt.blog.service.Impl.UserService">
+            
+    </bean>
+    <bean id = "userDao" class = "com.packt.blog.dao.Impl.UserDaoImpl">
+            
+    </bean>
+<!--    <bean id = "postDao" class = "com.packt.blog.dao.Impl.PostDaoImpl">
+            
+    </bean>-->
+    <bean id = "roleDao" class = "com.packt.blog.dao.Impl.RoleDaoImpl">
+            
+    </bean>
+    <bean id="customUserDetailsService" class="com.packt.blog.service.Impl.CustomAuthenticationProvider"/><!--
+ -->
+    <!-- Hibernate Transaction Manager -->
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+   
+ 
+</beans>
